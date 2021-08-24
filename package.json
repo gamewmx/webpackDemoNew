@@ -32,6 +32,9 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.1",
+    "redux-devtools-extension": "^2.13.9",
     "typescript": "^4.3.5"
   }
 }

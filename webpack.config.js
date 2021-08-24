@@ -86,5 +86,13 @@ module.exports = {
             // 接口请求代理
         },
         open:true
+    },
+    resolve: {
+        extensions: [
+            '.ts',
+            '.js',
+            '.json',
+            '.tsx'
+        ]
     }
 }
