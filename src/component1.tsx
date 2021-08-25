@@ -1,7 +1,7 @@
 import React, {Component, useEffect, useImperativeHandle, useRef, useState} from "react";
 import ReactDOM from 'react-dom';
 import {useDispatch, useSelector, useStore} from "react-redux";
-
+import './style/init.less'
 interface students{
     name:string;
     age:number;
@@ -22,7 +22,8 @@ export default function component1(props){
 
     useEffect(()=>{
         console.log(store.getState(),b)
-    },)
+    },[])
+
     return(
         <>
         <div>hhhhh</div>
@@ -33,6 +34,16 @@ export default function component1(props){
                 dispatch({type:'addCount',payload:10})
             }>reducer</button>
         <RefButton ref={inputRef}></RefButton>
+        <div className={'container'}>
+            <div className={'items'} style={{flexGrow:1}}></div>
+            <div className={'items'} style={{flexGrow:1}}></div>
+            <div className={'items'} style={{flexGrow:1}}></div>
+            <div className={'items'} style={{flexGrow:1}}></div>
+            <div className={'items'} style={{flexGrow:1}}></div>
+            <div className={'items'} style={{flexGrow:1}}></div>
+            <div className={'items'} style={{flexGrow:1}}></div>
+
+        </div>
         </>
     )
 }
