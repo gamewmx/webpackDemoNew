@@ -1,6 +1,6 @@
 // import React from 'react'
 import  React,{useState,useEffect} from 'react'
-import {bubbleSort, debounce, flattenDeep, quickSort} from "./util/utils";
+import {bubbleSort, debounce, debouncea, flattenDeep, quickSort} from "./util/utils";
 import './style/init.less'
 import _ from 'lodash'
 
@@ -11,24 +11,22 @@ export default class demo extends React.Component<any, any>{
         this.state={
             word:""
         }
-        this.wordChange = debounce(this.wordChange,2000)
-        this.buttonClick = debounce(this.buttonClick,1000)
     }
 
     componentDidMount() {
-        let arr = [10,22,[31,4,[5,6]]]
-        arr= flattenDeep(arr)
-        arr = quickSort(arr)
-        console.log(arr)
-        for(let i = 0 ;i < 10;i++ ){
-            // (function(j){
-            //     setTimeout(()=>{console.log(j+1)},j*1000)
-            // })(i)
-            setTimeout(()=>{
-                console.log(i+1)},i*1000)
-        }
-        let a = BigInt(10)
-        console.log(typeof a)
+        // let arr = [10,22,[31,4,[5,6]]]
+        // arr= flattenDeep(arr)
+        // arr = quickSort(arr)
+        // console.log(arr)
+        // for(let i = 0 ;i < 10;i++ ){
+        //     // (function(j){
+        //     //     setTimeout(()=>{console.log(j+1)},j*1000)
+        //     // })(i)
+        //     setTimeout(()=>{
+        //         console.log(i+1)},i*1000)
+        // }
+        // let a = BigInt(10)
+        // console.log(typeof a)
     }
 
     myCall(context=window,...args){
@@ -71,14 +69,12 @@ export default class demo extends React.Component<any, any>{
     // }
 
 
-    buttonClick = ()=>{
-        console.log('=====')
-    }
-
     render(){
-        console.log(this)
         return(
-            <div className={'wrapper'}>
+            <div className={'wrapper'} onMouseMove={debouncea(function(){
+                    console.log('===')
+            }
+                ,1000,true)}>
                 <div className={'box'}/>
             </div>
             // <div onMouseMove={_.debounce(this.buttonClick)}>

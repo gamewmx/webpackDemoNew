@@ -119,6 +119,12 @@ function myPromise(constructor){
 
 }
 
+function flatten(array){
+    return array.reduce((total,current)=>{
+        return total.concat((Array.isArray(current) ? flatten(current) : current )  )
+    },[])
+}
+
 
 export function flattenDeep(arr){
     return arr.reduce((total,current)=>{
@@ -142,21 +148,20 @@ export function bubbleSort(arr){
     console.log(arr)
     return arr
 }
-function bubbleSor1t(list) {
-    var n = list.length;
-    if (!n) return [];
-
-    for (var i = 0; i < n; i++) {
-        // 注意这里需要 n - i - 1
-        for (var j = 0; j < n - i - 1; j++) {
-            if (list[j] > list[j + 1]) {
-                var temp = list[j + 1];
-                list[j + 1] = list[j];
-                list[j] = temp;
+function bubbleSort1(array){
+    if(!Array.isArray(array)){
+        return
+    }
+    for(let i = 0 ; i < array.length ; i ++ ){
+        for(let j = 0 ; j < array.length - i -1 ; j ++ ){
+            if( array[j] > array[j+1] ){
+                let temp = null
+                temp = array[j+1]
+                array[j+1] = array[j]
+                array[j] = temp
             }
         }
     }
-    return list;
 }
 
 export function quickSort(list){
@@ -177,4 +182,129 @@ export function quickSort(list){
     }
 
     return [...quickSort(left),midValue,...quickSort(right)]
+}
+
+function quickSort1(array){
+    if(!Array.isArray(array))   return;
+    let midIndex = Math.floor((array.length/2))
+    let midValue = list[midIndex]
+    let left = []
+    let right = []
+    for(let i = 0 ; i< array.length ; i ++){
+        if(midValue === array[i])   continue
+        if(array[i] < midValue ){
+            left.push(array[i])
+        }else{
+            right.push(array[i])
+        }
+    }
+    return [...quickSort(left),midValue,...quickSort(right)]
+
+}
+
+
+class Promise{
+
+    static PENDING = "待定";
+    static FULFILLED= "成功";
+    static REJECTED = "拒绝";
+    constructor(func) {
+        this.status = Promise.PENDING
+        this.result = null
+        try{//直接在func中 throw错误时的捕捉
+            func(this.resolve.bind(this),this.reject.bind(this))//new Promise对象时，传入的方法会立刻执行   所以构造函数里执行传入的func
+        }catch (e) {
+            this.reject(e)
+        }
+
+    }
+
+    resolve(result){
+        if(this.status === Promise.PENDING){
+            this.status = Promise.FULFILLED
+            this.result = result
+        }
+    }
+
+    reject(result){
+        if(this.status === Promise.PENDING){
+            this.status = Promise.REJECTED
+            this.result = result
+        }
+    }
+
+    then(onFullFilled,onRejected){
+        onFullFilled = typeof onFullFilled === 'function'?onFullFilled:()=>{}
+        onRejected = typeof onRejected === 'function'?onRejected:()=>{}
+        if(this.status === Promise.FULFILLED){
+            onFullFilled(this.result)
+        }
+        if(this.status === Promise.REJECTED){
+            onRejected(this.result)
+        }
+    }
+}
+
+function aaa(array){
+    return array.reduce((total,current)=>{
+        return total.concat((Array.isArray(current) ? aaa(current) : current))
+    },[])
+}
+
+export function debouncea(func,wait = 300,immediate){
+    let timer
+    return function(){
+        var context = this
+        clearTimeout(timer)
+        if(immediate){
+            var callNow = !timer
+            timer = setTimeout(()=>{
+                timer = null
+            },wait)
+            if(callNow)   func.apply(context,arguments)
+        }else{
+            timer = setTimeout(()=>{
+                func.apply(context,arguments)
+            },wait)
+        }
+
+    }
+}
+
+export function throttlea(func,wait){
+    let prevTime
+    return function(){
+        let now = new Date()
+        const context = this
+        if(now - prevTime>=wait){
+            func.apply(context,arguments)
+            prevTime = now
+        }
+    }
+}
+
+export function call(context,...args){
+    if(!context) context = window
+    const fn = Symbol()
+    context[fn] = this
+    const result = context.fn(...args)
+    delete context.fn
+    return result
+}
+
+export function apply(context,args = []){
+    if(!context)    context = window
+    const fn = Symbol()
+    context[fn] = this
+    const result = context[fn](...args)
+    delete context[fn]
+    return result
+}
+
+export function bind(context,...args){
+    const fn = this
+    if(!context)    context = window
+    return function (...otherArgs){
+        return fn.apply(context,[...args,...otherArgs])
+    }
 }
