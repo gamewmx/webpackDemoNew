@@ -26,7 +26,6 @@ export function debounce(fn, delay = 1000) {
 export function debounce1 (func,wait = 1000){
     let timer = 0
     return function (...args) {
-        console.log(timer,func)
         if(timer)   clearTimeout(timer)
         timer = setTimeout(()=>{
             func.apply(this,args)
@@ -35,14 +34,13 @@ export function debounce1 (func,wait = 1000){
 }
 
 export function throttle(func,wait=1000){
-    let lastTime = 0
-    return function (...args) {
-        let now = new Date()
-        if(now - lastTime > wait){
-            lastTime = now
-            func.apply(this,args)
-        }
-
+    let timer = null
+    return function(){
+        if(timer) return
+        timer = setTimeout(()=>{
+            func()
+            timer = null
+        },wait)
     }
 }
 
@@ -81,42 +79,6 @@ export function myBind(context , ...outerargs){
         }
         return self.apply(context,[...outerargs,...innerArgs])
     }
-}
-
-
-function myPromise(constructor){
-    let self = this
-    self.status = 'pending'
-    self.value = undefined
-    self.reason = undefined
-
-    function resolve(value){
-        if(self.status === 'pending'){
-            self.value = value
-            self.status  = 'resolved'
-        }
-    }
-    function reject(reason){
-        if(self.status === 'pending'){
-            self.reason = reason
-            self.status  = 'rejected'
-        }
-    }
-
-    function then(onFullfilled,onRejected){
-        if(self.status === 'resolved'){
-            onFullfilled(self.value)
-        }else{
-            onRejected(self.reason)
-        }
-    }
-
-    try{
-        constructor(resolve,reject)
-    }catch (e) {
-        reject(e)
-    }
-
 }
 
 function flatten(array){
@@ -283,6 +245,33 @@ export function throttlea(func,wait){
     }
 }
 
+export function myCall(context,...args){
+    if(!context) context = window
+    const fn = Symbol()
+    context[fn] = this
+    const result = context.fn(...args)
+    delete context[fn]
+    return result
+}
+
+export function myApply(context,args = []){
+    if(!context) context = window
+    const fn = Symbol()
+    context[fn] = this
+    const result = context.fn(args)
+    delete context[fn]
+    return result
+}
+
+export function myBind(){
+    const self = this
+    const args = Array.prototype.slice.call(arguments)
+    const thisValue = args.shift()
+    return function(){
+        return self.apply(thisValue,args)
+    }
+}
+
 export function call(context,...args){
     if(!context) context = window
     const fn = Symbol()
@@ -308,3 +297,19 @@ export function bind(context,...args){
         return fn.apply(context,[...args,...otherArgs])
     }
 }
+
+function myNew(obj,...rest){
+    //基于obj的原型创建一个新的对象
+    const newObj = Object.create(obj.prototype)
+    //添加属性到新创建的obj上，并获取obj函数执行的结果
+    const result =  obj.apply(newObj,rest)
+    //如果执行结果有返回值并且是一个对象，返回执行的结果，否则返回新创建的对象
+    return typeof result === 'object'?result:newObj
+}
+class Person{
+    constructor(name) {
+        this.name = name
+    }
+}
+const myPerson = myNew(Person,'wmx')
+console.log(myPerson)
