@@ -5,8 +5,12 @@ import Demo from './demo'
 import Hoc from "./Hoc";
 import A from "./A";
 import Counter from './Counter'
-
+import {BrowserRouter} from "react-router-dom";
+import Map from './MapContainer'
+import {connect} from "react-redux";
 class App extends React.Component<any, any> {
+    private counterRef = React.createRef()
+    private connectRef = React.createRef()
     constructor(props) {
         super(props);
         this.state = {
@@ -18,21 +22,55 @@ class App extends React.Component<any, any> {
         num += 1
         this.setState({num})
     }
+
+    componentDidMount() {
+        // for(var i = 0 ; i <100 ; i++){
+        //     (function(j){
+        //         setTimeout(()=>{
+        //             console.log(j)
+        //         },1000*j)
+        //     })(i)
+        //
+        //
+        // }
+
+
+    }
+
     render() {
-        let Wrap = Hoc(A)
+        // const Wrap = Hoc(A)
+        console.log(this.connectRef)
         return (
             <>
+            {/*<Map/>*/}
+            <A name={'why'} ref={this.connectRef}/>
+                <button onClick={()=>this.props.dispatch({
+                    type:'dispatchTest',
+                    payload:[1,2,3]
+                })}>test</button>
+            <BrowserRouter>
                 <h1> Hello111, World! ！！！！</h1>
                 {/*<Component1 App={this}>*/}
                 {/*    <div>1</div>*/}
                 {/*    <div>2</div>*/}
                 {/*</Component1>*/}
                 <Demo/>
-                {/*<Wrap/>*/}
-                {/*<Counter num={this.state.num} onClick={this.onClick}/>*/}
+                {/*<div id={'mapContainer'}>*/}
+
+                {/*</div>*/}
+
+
+
+                <Counter num={this.state.num} onClick={this.onClick}/>
+            </BrowserRouter>
             </>
         );
     }
 }
 
-export default App;
+const mapStateToProps= state=>{
+    return({
+        initReducer:state.initReducer
+    })
+}
+export default connect(mapStateToProps)(App);

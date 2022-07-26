@@ -56,8 +56,29 @@ export default class demo extends React.Component<any, any>{
         }
     }
 
+    // debounce = (fn , wait = 1000)=>{
+    //     let timer = 0
+    //     return function (...args){
+    //         if(timer) clearTimeout(timer)
+    //         timer = setTimeout(()=>{
+    //             fn.apply(this,args)
+    //         },wait)
+    //     }
+    // }
+
+    // throttle = (fn,wait = 1000)=>{
+    //     let lastTime
+    //     return function(...args){
+    //         let now = new Date()
+    //         if(now - lastTime > wait){
+    //             fn.apply(this,args)
+    //             lastTime = now
+    //         }
+    //     }
+    // }
+    //
     // throttle(func,wait=1000){
-    //     let lastTime = 0
+    //     let lastTime
     //     return function (...args) {
     //         let now = new Date()
     //         if(now - lastTime > wait){
@@ -71,16 +92,29 @@ export default class demo extends React.Component<any, any>{
 
     render(){
         return(
-            <div className={'wrapper'} onMouseMove={debouncea(function(){
-                    console.log('===')
-            }
-                ,1000,true)}>
-                <div className={'box'}/>
-            </div>
-            // <div onMouseMove={_.debounce(this.buttonClick)}>
-            //     <button onClick={this.buttonClick}>debounceTest</button>
-            //     <input value={this.state.word} onChange={_.debounce(this.wordChange,1000)}/>
-            // </div>
+          <>
+              {/*<div style={{border:'1px solid black',width:500,height:500,position:'relative'}}>*/}
+              {/*    <div style={{border:'1px solid black',top:'50%',width:100,height:100,position:'absolute',transform:'translateY(-50%)'}}></div>*/}
+              {/*    /!*<div style={{border:'1px solid black',margin:20,width:100,height:100,float:'left'}}></div>*!/*/}
+              {/*</div>*/}
+              {/*<div style={{height:100}}>*/}
+              {/*    <div style={{border:'1px solid black',width:100,height:100,float:'left'}}></div>*/}
+              {/*    /!*<div style={{overflow:'hidden'}}>*!/*/}
+              {/*    <div style={{border:'1px solid black',height:100,marginLeft:'100px'}}></div>*/}
+              {/*    /!*</div>*!/*/}
+              {/*</div>*/}
+              {/*<div className="container">*/}
+
+              {/*    <div className="left"></div>*/}
+              {/*    <div className="main"></div>*/}
+              {/*    <div className="right"></div>*/}
+              {/*</div>*/}
+              <div className="content">
+                  <div className="main"></div>
+              </div>
+              <div className="left"></div>
+              <div className="right"></div>
+          </>
         )
     }
 

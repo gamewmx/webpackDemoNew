@@ -44,6 +44,18 @@ export function throttle(func,wait=1000){
     }
 }
 
+function throttle1 (func,wait = 1000){
+    let prevTime = 0
+    return function(...args){
+        let nowTime = new Date()
+        if(nowTime - prevTime > wait ){
+            func.apply(this,args)
+            prevTime = nowTime
+        }
+    }
+}
+
+
 export function deepClone (obj){
     if(typeof obj !== 'object' || obj === null){
         return obj
@@ -57,6 +69,22 @@ export function deepClone (obj){
     for(let key in obj){
         if(obj.hasOwnProperty(key)){
             copy[key] = deepClone(obj[key])
+        }
+    }
+    return copy
+}
+
+function deepClone1(obj){
+    if( typeof obj !=='object' || obj === null ){
+        return obj
+    }
+    let copy = {}
+    if(Array.isArray(obj)){
+        copy = []
+    }
+    for(let key in  obj){
+        if(obj.hasOwnProperty(key)){
+            copy[key] = deepClone1(obj[key])
         }
     }
     return copy
@@ -81,9 +109,10 @@ export function myBind(context , ...outerargs){
     }
 }
 
-function flatten(array){
-    return array.reduce((total,current)=>{
-        return total.concat((Array.isArray(current) ? flatten(current) : current )  )
+
+function flatten(arr){
+    return arr.reduce((total,current)=>{
+        return total.concat((Array.isArray(current)? flatten(current) : current))
     },[])
 }
 
@@ -124,6 +153,7 @@ function bubbleSort1(array){
             }
         }
     }
+    //O(n^2)
 }
 
 export function quickSort(list){
@@ -142,25 +172,27 @@ export function quickSort(list){
             right.push(list[i])
         }
     }
-
+    //nlogn
     return [...quickSort(left),midValue,...quickSort(right)]
 }
 
-function quickSort1(array){
-    if(!Array.isArray(array))   return;
-    let midIndex = Math.floor((array.length/2))
+function quickSort1(arr){
+    if(arr.length <= 1) return arr
+
+    let midIndex = Math.floor(arr.length/2)
     let midValue = list[midIndex]
     let left = []
     let right = []
-    for(let i = 0 ; i< array.length ; i ++){
-        if(midValue === array[i])   continue
-        if(array[i] < midValue ){
-            left.push(array[i])
-        }else{
-            right.push(array[i])
+
+    for(let i = 0 ; i < arr.length ; i++){
+        if(i == midIndex) continue
+        if(arr[i] < midValue ) {
+            left.push(arr[i])
+        }else if(arr[i] > midValue){
+            right.push(arr[i])
         }
     }
-    return [...quickSort(left),midValue,...quickSort(right)]
+    return [...quickSort1(left),midValue,...quickSort1(right)]
 
 }
 
@@ -245,14 +277,6 @@ export function throttlea(func,wait){
     }
 }
 
-export function myCall(context,...args){
-    if(!context) context = window
-    const fn = Symbol()
-    context[fn] = this
-    const result = context.fn(...args)
-    delete context[fn]
-    return result
-}
 
 export function myApply(context,args = []){
     if(!context) context = window
@@ -263,14 +287,7 @@ export function myApply(context,args = []){
     return result
 }
 
-export function myBind(){
-    const self = this
-    const args = Array.prototype.slice.call(arguments)
-    const thisValue = args.shift()
-    return function(){
-        return self.apply(thisValue,args)
-    }
-}
+
 
 export function call(context,...args){
     if(!context) context = window
@@ -306,10 +323,3 @@ function myNew(obj,...rest){
     //如果执行结果有返回值并且是一个对象，返回执行的结果，否则返回新创建的对象
     return typeof result === 'object'?result:newObj
 }
-class Person{
-    constructor(name) {
-        this.name = name
-    }
-}
-const myPerson = myNew(Person,'wmx')
-console.log(myPerson)
