@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import Hoc from "./Hoc";
 import {connect} from "react-redux";
+import { getStore } from './store/createStore';
 
 
 const Auth = enhanceComponent(carPage)
@@ -10,6 +11,8 @@ class Index extends React.Component<any, any>{
         super(props);
     }
     render(){
+        console.log(this.props);
+        
         return (
             <div>
                 <Auth a={123}></Auth>
@@ -39,9 +42,10 @@ function carPage(props){
 }
 
 function enhanceComponent(WrappedComponent){
+    console.log(getStore());
+    
     function newComponent(props){
         const [isLogin,setLogin] = useState(false)
-        console.log(props)
         return(
             <div>
                 <button onClick={()=>setLogin(!isLogin)}>切换</button>

@@ -13,7 +13,6 @@ export default (state = init, action) => {
             console.log('===')
             return {...state,dispatchtestArray:payload}
         case 'refTest':
-            console.log('===',action)
             return {...state,refTest:payload}
         default:
             return state

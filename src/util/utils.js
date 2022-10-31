@@ -74,17 +74,17 @@ export function deepClone (obj){
     return copy
 }
 
-function deepClone1(obj){
-    if( typeof obj !=='object' || obj === null ){
+function deep(obj){
+    if(typeof obj !=='object' || obj === null ){
         return obj
     }
     let copy = {}
     if(Array.isArray(obj)){
         copy = []
     }
-    for(let key in  obj){
+    for(let key in obj){
         if(obj.hasOwnProperty(key)){
-            copy[key] = deepClone1(obj[key])
+            copy[key] = deep(obj[key])
         }
     }
     return copy
