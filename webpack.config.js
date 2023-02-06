@@ -18,6 +18,12 @@ module.exports = {
         filename: "js/[name].[hash].js",
         publicPath: "/" // 打包后的资源的访问路径前缀
     },
+    // // 出口
+    // output: {
+    //     path : path.join(__dirname,'dist'),
+    //     filename: "[name].[hash].js",
+    //     // publicPath: "/" // 打包后的资源的访问路径前缀
+    // },
     // 模块
     module:{
         rules: [

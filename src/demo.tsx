@@ -8,8 +8,6 @@ import EventBus from "./EventBus";
 export default class demo extends React.Component<any, any>{
     constructor(props) {
         super(props);
-        let a = 1 ;
-        const b = 2;
         this.state={
             word:""
         }
