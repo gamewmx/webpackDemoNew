@@ -24,7 +24,7 @@ export function debounce(fn, delay = 1000) {
      }
 
 export function debounce1 (func,wait = 1000){
-    let timer = 0
+    let timer
     return function (...args) {
         if(timer)   clearTimeout(timer)
         timer = setTimeout(()=>{
@@ -32,6 +32,19 @@ export function debounce1 (func,wait = 1000){
         },wait)
     }
 }
+
+function a1232(fn,wait = 1000){
+    let timer
+    return function(){
+        let context = this
+        let args = arguments
+        if(timer) clearTimeout(timer)
+        timer = setTimeout(()=>{
+            fn.apply(context,args)
+        },wait)
+    }
+}
+
 
 export function throttle(func,wait=1000){
     let timer = null
@@ -70,20 +83,20 @@ export function myCall(context = window , ...args){
     return result
 }
 
-export function myBind(context , ...outerargs){
-    let self = this
+// export function myBind(context , ...outerargs){
+//     let self = this
+//
+//     return function F(...innerArgs){
+//         if(self instanceof F){
+//             return new self(...outerargs,...innerArgs)
+//         }
+//         return self.apply(context,[...outerargs,...innerArgs])
+//     }
+// }
 
-    return function F(...innerArgs){
-        if(self instanceof F){
-            return new self(...outerargs,...innerArgs)
-        }
-        return self.apply(context,[...outerargs,...innerArgs])
-    }
-}
-
-function flatten(array){
-    return array.reduce((total,current)=>{
-        return total.concat((Array.isArray(current) ? flatten(current) : current )  )
+function flatten(arr){
+    return arr.reduce((total,current)=>{
+        return total.concat((Array.isArray(current)?flatten(current):current))
     },[])
 }
 
@@ -98,8 +111,8 @@ export function bubbleSort(arr){
     if(!Array.isArray(arr)){
         return
     }
-    for(let i= 0 ;i<arr.length ;i++){
-        for(let j = 0;j<arr.length - i -1;j++){
+    for(let i= 0 ;i< arr.length - 1 ;i++){
+        for(let j = 0;j< arr.length - i -1;j++){
             if(arr[j] > arr[j+1]){
                 let temp = arr[j+1]
                 arr[j+1] = arr[j]
@@ -107,23 +120,21 @@ export function bubbleSort(arr){
             }
         }
     }
-    console.log(arr)
     return arr
 }
+
 function bubbleSort1(array){
-    if(!Array.isArray(array)){
-        return
-    }
-    for(let i = 0 ; i < array.length ; i ++ ){
-        for(let j = 0 ; j < array.length - i -1 ; j ++ ){
-            if( array[j] > array[j+1] ){
-                let temp = null
-                temp = array[j+1]
-                array[j+1] = array[j]
-                array[j] = temp
+    if(!Array.isArray(array))   return
+    for(let i = 0 ; i<array.length - 1 ; i ++ ){
+        for(let j = 0 ; j <array.length - i - 1 ; j++){
+            if(array[j] < array[j+1]){
+                let temp = array[j]
+                array[j] = array[j+1]
+                array[j+1] = temp
             }
         }
     }
+    return array
 }
 
 export function quickSort(list){
@@ -146,22 +157,21 @@ export function quickSort(list){
     return [...quickSort(left),midValue,...quickSort(right)]
 }
 
-function quickSort1(array){
-    if(!Array.isArray(array))   return;
-    let midIndex = Math.floor((array.length/2))
+function quickSort1 (list){
+    if(list.length <=1 )return list
+    let midIndex = Math.floor(list.length/2)
     let midValue = list[midIndex]
     let left = []
     let right = []
-    for(let i = 0 ; i< array.length ; i ++){
-        if(midValue === array[i])   continue
-        if(array[i] < midValue ){
-            left.push(array[i])
+    for(let i = 0 ; i < list.length ; i++ ){
+        if( i === midIndex) continue
+        if(list[i]>left[i]){
+            right.push(list[i])
         }else{
-            right.push(array[i])
+            left.push(list[i])
         }
     }
-    return [...quickSort(left),midValue,...quickSort(right)]
-
+    return [quickSort(left),midValue,quickSort(right)]
 }
 
 
@@ -213,6 +223,13 @@ function aaa(array){
     },[])
 }
 
+function flat(list){
+    return list.reduce((total,current)=>{
+        return total.concat((Array.isArray(current)? flat(current) : current))
+    },[])
+}
+
+
 export function debouncea(func,wait = 300,immediate){
     let timer
     return function(){
@@ -245,20 +262,52 @@ export function throttlea(func,wait){
     }
 }
 
-export function myCall(context,...args){
-    if(!context) context = window
-    const fn = Symbol()
-    context[fn] = this
-    const result = context.fn(...args)
-    delete context[fn]
-    return result
+
+function t123(func,wait = 1000){
+    let prevTime
+    return function(){
+        let nowTime = new Date()
+        const context = this
+        if(nowTime - prevTime > wait){
+            func.apply(context,arguments)
+            prevTime = nowTime
+        }
+    }
 }
+
+// export function myCall(context,...args){
+//     if(!context) context = window
+//     const fn = Symbol()
+//     context[fn] = this
+//     const result = context.fn(...args)
+//     delete context[fn]
+//     return result
+// }
+
+// function call (context,...args){
+//     if(!context) context = window
+//     const fn = Symbol()
+//     context[fn] = this
+//     const result = context[fn](...args)
+//     delete context[fn]
+//     return result
+// }
+
 
 export function myApply(context,args = []){
     if(!context) context = window
     const fn = Symbol()
     context[fn] = this
     const result = context.fn(args)
+    delete context[fn]
+    return result
+}
+
+function apply(context,args = []){
+    if(!context) context = window
+    const fn = Symbol()
+    context[fn] = this
+    const result = context[fn](args)
     delete context[fn]
     return result
 }
@@ -272,6 +321,15 @@ export function myBind(){
     }
 }
 
+function bind(){
+    const self = this
+    const args = [...arguments]
+    return function(){
+        self.apply(arguments[0],args.slice(1))
+    }
+}
+
+
 export function call(context,...args){
     if(!context) context = window
     const fn = Symbol()
@@ -281,22 +339,22 @@ export function call(context,...args){
     return result
 }
 
-export function apply(context,args = []){
-    if(!context)    context = window
-    const fn = Symbol()
-    context[fn] = this
-    const result = context[fn](...args)
-    delete context[fn]
-    return result
-}
+// export function apply(context,args = []){
+//     if(!context)    context = window
+//     const fn = Symbol()
+//     context[fn] = this
+//     const result = context[fn](args)
+//     delete context[fn]
+//     return result
+// }
 
-export function bind(context,...args){
-    const fn = this
-    if(!context)    context = window
-    return function (...otherArgs){
-        return fn.apply(context,[...args,...otherArgs])
-    }
-}
+// export function bind(context,...args){
+//     const fn = this
+//     if(!context)    context = window
+//     return function (...otherArgs){
+//         return fn.apply(context,[...args,...otherArgs])
+//     }
+// }
 
 function myNew(obj,...rest){
     //基于obj的原型创建一个新的对象
@@ -312,4 +370,45 @@ class Person{
     }
 }
 const myPerson = myNew(Person,'wmx')
-console.log(myPerson)
+// console.log(myPerson)
+
+
+Array.prototype.myReduce = function(fn, initialValue) {
+    let pre, index;
+    let arr = this.slice();
+    console.log(arr)
+    if (initialValue === undefined) {
+        // 没有设置初始值
+        for (let i = 0; i < arr.length; i++) {
+            // 找到数组中第一个存在的元素，跳过稀疏数组中的空值
+            if (!arr.hasOwnProperty(i)) continue;
+            console.log(arr.hasOwnProperty(i))
+            pre = arr[i]; // pre 为数组中第一个存在的元素
+            index = i + 1; // index 下一个元素
+            break; // 易错点：找到后跳出循环
+        }
+    } else {
+        index = 0;
+        pre = initialValue;
+    }
+    for (let i = index; i < arr.length; i++) {
+        // 跳过稀疏数组中的空值
+        if (!arr.hasOwnProperty(i)) continue;
+        console.log(arr.hasOwnProperty(i))
+        // 注意：fn函数接收四个参数，pre之前累计值、cur 当前值、 当前下标、 arr 原数组
+        pre = fn(pre, arr[i], i, this);
+    }
+    return pre;
+};
+
+Array.prototype.myMap = function (fn,content){
+    let arr = this.slice()
+    let result = []
+    for(let i = 0 ; i < arr.length ; i++){
+        result[i] = fn(arr[i])
+    }
+    return result
+}
+
+console.log([,1,2,3,4].myReduce((total,cur)=>total+cur,10))
+console.log([1,2,3,4].myMap(item => item * 2));

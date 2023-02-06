@@ -5,6 +5,58 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>mydemo</title>
 </head>
+<script>
+    // function test(n) {
+    //     var row = n
+    //     var mid = parseInt(row / 2) + 1;//mid代表中间一行
+    //     for (var i = 1; i <= row; i++) {
+    //         //每一行星星的个数
+    //         if (i < mid) {
+    //             var x = 2 * i - 1;
+    //         } else {
+    //             var x = 2 * (row - i + 1) - 1;
+    //         }
+    //         //空格的数量
+    //         var k = (row - x) / 2;
+    //         //输出每一行空格的数量
+    //         for (var j = k; j > 0; j--) {
+    //             document.write('&nbsp;')
+    //         }
+    //         //输出每一行星星的数量
+    //         for (var s = 1; s <= x; s++) {
+    //             document.write('*')
+    //         }
+    //         document.write('<br>')
+    //     }
+    // }
+    // test(4)
+    // var fullName = 'a';
+    // var testObj = function (){
+    //     return function(){
+    //         return {
+    //             obj: {
+    //                 fullName: 'b',
+    //                 prop: {
+    //                     fullName: 'c',
+    //                     getFullName: () => {
+    //                         console.log(this)
+    //                         return this.fullName;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    //
+    // console.log(testObj()().obj.prop.getFullName());
+    // var test = testObj()().obj.prop.getFullName;
+    // console.log(test());
+    for(let i = 0 ; i < 3 ; i++ ){
+        setTimeout(()=>{
+            console.log(i)
+        },0)
+    }
+</script>
 <body>
 <div id="app"></div>
 <!-- built files will be auto injected -->
