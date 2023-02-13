@@ -10,6 +10,8 @@ import Map from './MapContainer'
 import {connect} from "react-redux";
 import MockMemo from "./memoCallBack";
 import _ from "lodash";
+import {myPromise , MyPromise , Promise1} from '../myPromise'
+
 class App extends React.Component<any, any> {
     private counterRef = React.createRef()
     private connectRef = React.createRef()
@@ -76,6 +78,36 @@ class App extends React.Component<any, any> {
         //
         //
         // }
+        // 输出 ”成功“
+        const test = new Promise1((resolve, reject) => {
+            // resolve('下次一定')
+            throw new Error('白嫖失败')
+            resolve('下次')
+        }).then((res)=>{
+            console.log(res)},(reason)=>{
+            console.log(reason)}).then(res=>{
+
+        })
+        this.bagWeightTest([1,3,4],[15,20,30])
+    }
+
+    bagWeightTest = (weight,value)=>{
+        let len = weight.length
+        let dp = new Array(len).fill(0).map(item=>new Array(value.length).fill(0))
+        const bagWeight = 4
+        for(let j = weight[0] ; j <= bagWeight ; j++ ){
+            dp[0][j] = value[0]
+        }
+        for(let j = 0 ; j <= bagWeight ; j++ ){
+            for(let i = 1 ; i < weight.length ; i++ ){
+                if(j < weight[i]){
+                    dp[i][j] = dp[i-1][j]
+                }else{
+                    dp[i][j] = Math.max(dp[i-1][j-weight[i]]+value[i],dp[i-1][j])
+                }
+            }
+        }
+        console.log(dp)
     }
 
     render() {

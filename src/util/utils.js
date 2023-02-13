@@ -217,16 +217,16 @@ class Promise{
     }
 }
 
-function aaa(array){
-    return array.reduce((total,current)=>{
-        return total.concat((Array.isArray(current) ? aaa(current) : current))
-    },[])
-}
-
 function flat(list){
     return list.reduce((total,current)=>{
         return total.concat((Array.isArray(current)? flat(current) : current))
     },[])
+}
+
+function flattenDepp(array){
+    return array.reduce((total,current)=>{
+        return total.concat((Array.isArray(current) ? flattenDepp(current) : current))
+    })
 }
 
 
