@@ -10,7 +10,6 @@ export default (state = init, action) => {
         case 'reduceCount':
             return {...state,payload}
         case 'dispatchTest':
-            console.log('===')
             return {...state,dispatchtestArray:payload}
         case 'refTest':
             return {...state,refTest:payload}

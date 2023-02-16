@@ -75,6 +75,22 @@ export function deepClone (obj){
     return copy
 }
 
+function clone(obj){
+    if(typeof obj !== 'object' || obj === null ){
+        return obj
+    }
+    let copy = {}
+    if(Array.isArray(obj)){
+        copy = []
+    }
+    for(let key in obj ){
+        if(obj.hasOwnProperty(key)){
+            copy[key] = deepClone(obj[key])
+        }
+    }
+    return copy
+}
+
 export function myCall(context = window , ...args){
     let key = Symbol('key')
     context[key] = this
@@ -303,6 +319,14 @@ export function myApply(context,args = []){
     return result
 }
 
+function call1232(context = window , ...args){
+    let fn = Symbol()
+    context[fn] = this
+    const result = context[fn](...args)
+    delete context[fn]
+    return result
+}
+
 function apply(context,args = []){
     if(!context) context = window
     const fn = Symbol()
@@ -364,6 +388,13 @@ function myNew(obj,...rest){
     //如果执行结果有返回值并且是一个对象，返回执行的结果，否则返回新创建的对象
     return typeof result === 'object'?result:newObj
 }
+
+function new123(obj,...args){
+    const newObj = Object.create(obj.prototype)
+    const result = obj.apply(newObj , args)
+    return  typeof result === 'object' ? result : newObj
+}
+
 class Person{
     constructor(name) {
         this.name = name
@@ -401,6 +432,27 @@ Array.prototype.myReduce = function(fn, initialValue) {
     return pre;
 };
 
+function myReduce(arr,fn,initialValue){
+    let pre , index
+    let tempArr = [...arr]
+    if(!initialValue){
+        for(let i = 0 ; i < tempArr.length ; i ++ ){
+            if(!tempArr.hasOwnProperty(i)) continue
+            pre = arr[i]
+            index = i + 1
+            break;
+        }
+    }else{
+        pre = initialValue
+        index = 0
+    }
+    for(let i = index ; i < tempArr.length ; i ++ ){
+        if(!tempArr.hasOwnProperty(i)) continue
+        pre = fn(pre,tempArr[i],i , this)
+    }
+    return pre
+}
+
 Array.prototype.myMap = function (fn,content){
     let arr = this.slice()
     let result = []
@@ -410,5 +462,11 @@ Array.prototype.myMap = function (fn,content){
     return result
 }
 
-console.log([,1,2,3,4].myReduce((total,cur)=>total+cur,10))
-console.log([1,2,3,4].myMap(item => item * 2));
+function myInstanceOf (example , classFunc){
+    let proto = Object.getPrototypeOf(example)
+    while(true){
+        if( proto === null ) return false
+        if( proto === classFunc.prototype) return true
+        proto = Object.getPrototypeOf(proto)
+    }
+}

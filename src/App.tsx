@@ -18,7 +18,14 @@ class App extends React.Component<any, any> {
     constructor(props) {
         super(props);
         this.state = {
-            num : 0
+            num : 0,
+            list : [{
+                name:'1'
+            },{
+                name:"2"
+            },{
+                name:'3'
+            }]
         }
     }
     onClick = ()=>{
@@ -89,6 +96,11 @@ class App extends React.Component<any, any> {
 
         })
         this.bagWeightTest([1,3,4],[15,20,30])
+
+        const timer = requestAnimationFrame(()=>{
+            console.log('rafTest')
+        })
+        console.log(timer)
     }
 
     bagWeightTest = (weight,value)=>{
@@ -111,17 +123,27 @@ class App extends React.Component<any, any> {
     }
 
     render() {
+        const {list} = this.state
         // const Wrap = Hoc(A)
         return (
             <>
-                <div>123</div>
+                <div id={'testtt'}>123</div>
             {/* <Map/> */}
             {/* <A name={'why'} ref={this.connectRef} initReducer={this.props.initReducer}/> */}
-            {/*<button onClick={()=>this.props.dispatch({*/}
-            {/*    type:'dispatchTest',*/}
-            {/*    payload:[1,2,3]*/}
-            {/*})}>test</button>*/}
+            <button onClick={()=>this.props.dispatch({
+                type:'dispatchTest',
+                payload:[1,2,3]
+            })}>test</button>
+                <button onClick={()=>{
+                    const temp = list
+                    temp.push({name:Math.random() * 10})
+                    this.setState({list:temp})
+                    const arr: HTMLElement = document.querySelector('#testtt')
+                    arr.style.display = 'false'
+                    console.log(!arr.style.display)
+                }}>test123123</button>
             <MockMemo/>
+                {list.map(item=>{return item.name})}
             {/*<BrowserRouter>*/}
             {/*    <h1> Hello111, World! ！！！！</h1>*/}
             {/*    /!*<Component1 App={this}>*!/*/}
