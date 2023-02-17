@@ -127,35 +127,35 @@ class App extends React.Component<any, any> {
         // const Wrap = Hoc(A)
         return (
             <>
-                <div id={'testtt'}>123</div>
+                {/*<div id={'testtt'}>123</div>*/}
             {/* <Map/> */}
             {/* <A name={'why'} ref={this.connectRef} initReducer={this.props.initReducer}/> */}
-            <button onClick={()=>this.props.dispatch({
-                type:'dispatchTest',
-                payload:[1,2,3]
-            })}>test</button>
-                <button onClick={()=>{
-                    const temp = list
-                    temp.push({name:Math.random() * 10})
-                    this.setState({list:temp})
-                    const arr: HTMLElement = document.querySelector('#testtt')
-                    arr.style.display = 'false'
-                    console.log(!arr.style.display)
-                }}>test123123</button>
+            {/*<button onClick={()=>this.props.dispatch({*/}
+            {/*    type:'dispatchTest',*/}
+            {/*    payload:[1,2,3]*/}
+            {/*})}>test</button>*/}
+            {/*    <button onClick={()=>{*/}
+            {/*        const temp = list*/}
+            {/*        temp.push({name:Math.random() * 10})*/}
+            {/*        this.setState({list:temp})*/}
+            {/*        const arr: HTMLElement = document.querySelector('#testtt')*/}
+            {/*        arr.style.display = 'false'*/}
+            {/*        console.log(!arr.style.display)*/}
+            {/*    }}>test123123</button>*/}
             <MockMemo/>
-                {list.map(item=>{return item.name})}
-            {/*<BrowserRouter>*/}
-            {/*    <h1> Hello111, World! ！！！！</h1>*/}
-            {/*    /!*<Component1 App={this}>*!/*/}
-            {/*    /!*    <div>1</div>*!/*/}
-            {/*    /!*    <div>2</div>*!/*/}
-            {/*    /!*</Component1>*!/*/}
-            {/*    /!*<Demo/>*!/*/}
-            {/*    /!*<div id={'mapContainer'}>*!/*/}
+                {/*{list.map(item=>{return item.name})}*/}
+            <BrowserRouter>
+                <h1> Hello111, World! ！！！！</h1>
+                {/*<Component1 App={this}>*/}
+                {/*    <div>1</div>*/}
+                {/*    <div>2</div>*/}
+                {/*</Component1>*/}
+                <Demo/>
+                {/*<div id={'mapContainer'}>*/}
 
-            {/*    /!*</div>*!/*/}
-            {/*    <Counter num={this.state.num} onClick={this.onClick}/>*/}
-            {/*</BrowserRouter>*/}
+                {/*</div>*/}
+                <Counter num={this.state.num} onClick={this.onClick}/>
+            </BrowserRouter>
             </>
         );
     }

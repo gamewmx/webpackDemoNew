@@ -5,6 +5,10 @@ import './style/init.less'
 import _ from 'lodash'
 import EventBus from "./EventBus";
 
+let localStream: MediaStream
+// @ts-ignore
+let mediaRecorder: MediaRecorder
+
 export default class demo extends React.Component<any, any>{
     constructor(props) {
         super(props);
@@ -28,10 +32,13 @@ export default class demo extends React.Component<any, any>{
         // let a = BigInt(10)
         // console.log(typeof a)
         // this.getLocalStream({
-        //     audio: false,
-        //     video: true,
+        //     audio: true,
+        //     video: {
+        //         width:1024,
+        //         height:768
+        //     }
         // })
-        // this.getDevices()
+        this.getDevices()
         // var eventBus = new EventBus()
         // eventBus.on('change',()=>{
         //     console.log('1111')
@@ -228,8 +235,8 @@ export default class demo extends React.Component<any, any>{
     // 获取本地音视频流
     async getLocalStream(constraints: MediaStreamConstraints) {
         // 获取媒体流
-        const stream = await navigator.mediaDevices.getUserMedia({audio: false,
-            video: true,})
+        const stream = localStream = await navigator.mediaDevices.getUserMedia(constraints)
+        console.log(navigator.mediaDevices.getSupportedConstraints(),)
         this.playLocalStream(stream)
     }
     // 播放本地视频流
@@ -238,7 +245,145 @@ export default class demo extends React.Component<any, any>{
         videoEl.srcObject = stream
     }
 
+    // 获取屏幕共享的媒体流
+    async shareScreen() {
+        // 这里正在录制视频  看看效果11111
+        // @ts-ignore
+        localStream = await navigator.mediaDevices.getDisplayMedia({
+            audio: true,
+            video: true,
+        })
+        // 播放本地视频流
+        this.playStream(localStream)
+    }
+
+    // 在视频标签中播放视频流
+    playStream(stream: MediaStream) {
+        const video = document.querySelector('#localVideo') as HTMLVideoElement
+        video.srcObject = stream
+    }
+
+    // 拍照
+    takePhoto() {
+        const videoEl = document.getElementById('localVideo') as HTMLVideoElement
+        const cnv : HTMLElement = document.getElementById('canvas')
+        const cxt = (cnv as any).getContext('2d')
+        const ctx = (cnv as any).getContext('2d')
+        const canvas = document.createElement('canvas')
+        canvas.width = videoEl.videoWidth
+        canvas.height = videoEl.videoHeight
+        // const ctx = canvas.getContext('2d')!
+        ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height)
+        // imgList.value.push(canvas.toDataURL('image/png'))
+        // console.log('🚀🚀🚀 / imgList', imgList)
+
+        // 添加滤镜
+        const filterList = [
+            'blur(5px)', // 模糊
+            'brightness(0.5)', // 亮度
+            'contrast(200%)', // 对比度
+            'grayscale(100%)', // 灰度
+            'hue-rotate(90deg)', // 色相旋转
+            'invert(100%)', // 反色
+            'opacity(90%)', // 透明度
+            'saturate(200%)', // 饱和度
+            'saturate(20%)', // 饱和度
+            'sepia(100%)', // 褐色
+            'drop-shadow(4px 4px 8px blue)', // 阴影
+        ]
+
+        for (let i = 0; i < filterList.length; i++) {
+            ctx.filter = filterList[i]
+            ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height)
+            // imgList.value.push(canvas.toDataURL('image/png'))
+        }
+    }
+
+    // 获取支持的媒体类型
+    getSupportedMimeTypes() {
+        const media = 'video'
+        // 常用的视频格式
+        const types = [
+            'webm',
+            'mp4',
+            'ogg',
+            'mov',
+            'avi',
+            'wmv',
+            'flv',
+            'mkv',
+            'ts',
+            'x-matroska',
+        ]
+        // 常用的视频编码
+        const codecs = ['vp9', 'vp9.0', 'vp8', 'vp8.0', 'avc1', 'av1', 'h265', 'h264']
+        // 支持的媒体类型
+        const supported: string[] = []
+// @ts-ignore
+        const isSupported = MediaRecorder.isTypeSupported
+        // 遍历判断所有的媒体类型
+        types.forEach((type: string) => {
+            const mimeType = `${media}/${type}`
+            codecs.forEach((codec: string) =>
+                [
+                    `${mimeType};codecs=${codec}`,
+                    `${mimeType};codecs=${codec.toUpperCase()}`,
+                ].forEach((variation) => {
+                    if (isSupported(variation)) supported.push(variation)
+                }),
+            )
+            if (isSupported(mimeType)) supported.push(mimeType)
+        })
+        return supported
+    }
+// 录制媒体流
+    async startRecord() {
+        if (mediaRecorder) {
+            mediaRecorder.stop()
+            return
+        }
+        const kbps = 1024
+        const Mbps = kbps * kbps
+        const options = {
+            audioBitsPerSecond: 128000,
+            videoBitsPerSecond: 2500000,
+            mimeType: 'video/webm; codecs="vp8,opus"',
+        }
+        // @ts-ignore
+        mediaRecorder = new MediaRecorder(localStream, options)
+        mediaRecorder.start()
+        console.log(mediaRecorder)
+        mediaRecorder.ondataavailable = (e) => {
+            // 将录制的数据合并成一个 Blob 对象
+            // const blob = new Blob([e.data], { type: e.data.type })
+
+            // 🌸重点是这个地方，我们不要把获取到的 e.data.type设置成 blob 的 type，而是直接改成 mp4
+            const blob = new Blob([e.data], { type: 'video/mp4' })
+            console.log('走这里了吗')
+            this.downloadBlob(blob)
+        }
+        mediaRecorder.onstop = (e: Event) => {
+            // 停止录制
+        }
+    }
+
+    // 下载 Blob
+    downloadBlob(blob: Blob) {
+        // 将 Blob 对象转换成一个 URL 地址
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        // 设置 a 标签的 href 属性为刚刚生成的 URL 地址
+        a.href = url
+        // 设置 a 标签的 download 属性为文件名
+        a.download = `${new Date().getTime()}.${blob.type.split('/')[1]}`
+        // 模拟点击 a 标签
+        a.click()
+        // 释放 URL 地址
+        URL.revokeObjectURL(url)
+    }
+
     render(){
+        console.log(this.getSupportedMimeTypes())
         return(
             <>
             <div className={'wrapper'} onMouseMove={debouncea(function(){
@@ -256,7 +401,20 @@ export default class demo extends React.Component<any, any>{
             {/*         width="1000"*/}
             {/*         height="1000"*/}
             {/*         style={{"border": '1px solid #ccc',margin:20}} onClick={this.canvastest}></canvas>*/}
-            {/*    <video id="localVideo" autoPlay playsInline muted></video>*/}
+                <canvas  id="canvas"
+                     width="1000"
+                     height="1000"
+                     style={{"border": '1px solid #ccc',margin:20}} onClick={this.canvastest}></canvas>
+                <video id="localVideo" autoPlay playsInline muted></video>
+                <button onClick={()=>this.takePhoto()}>
+                    拍照
+                </button>
+                <button onClick={()=>this.shareScreen()}>
+                    shareScreen
+                </button>
+                <button onClick={()=>this.startRecord()}>
+                    录制
+                </button>
             </>
             // <div onMouseMove={_.debounce(this.buttonClick)}>
             //     <button onClick={this.buttonClick}>debounceTest</button>
