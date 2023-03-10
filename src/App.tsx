@@ -5,12 +5,15 @@ import Demo from './demo'
 import Hoc from "./Hoc";
 import A from "./A";
 import Counter from './Counter'
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter, Routes} from "react-router-dom";
 import Map from './MapContainer'
 import {connect} from "react-redux";
 import MockMemo from "./memoCallBack";
 import _ from "lodash";
 import {myPromise , MyPromise , Promise1} from '../myPromise'
+import WebRtc from './WebRtc'
+import RafTest from './raftest'
+import {Route} from "react-router";
 
 class App extends React.Component<any, any> {
     private counterRef = React.createRef()
@@ -55,7 +58,6 @@ class App extends React.Component<any, any> {
             return arr
         }
 
-        console.log(temp)
         recursiveFn1(temp,checkedKeys,searchStr)
     }
 
@@ -97,10 +99,10 @@ class App extends React.Component<any, any> {
         })
         this.bagWeightTest([1,3,4],[15,20,30])
 
-        const timer = requestAnimationFrame(()=>{
-            console.log('rafTest')
-        })
-        console.log(timer)
+        // const timer = requestAnimationFrame(()=>{
+        //     console.log('rafTest')
+        // })
+        // console.log(timer)
     }
 
     bagWeightTest = (weight,value)=>{
@@ -127,6 +129,7 @@ class App extends React.Component<any, any> {
         // const Wrap = Hoc(A)
         return (
             <>
+                hello world
                 {/*<div id={'testtt'}>123</div>*/}
             {/* <Map/> */}
             {/* <A name={'why'} ref={this.connectRef} initReducer={this.props.initReducer}/> */}
@@ -142,20 +145,25 @@ class App extends React.Component<any, any> {
             {/*        arr.style.display = 'false'*/}
             {/*        console.log(!arr.style.display)*/}
             {/*    }}>test123123</button>*/}
-            <MockMemo/>
+            {/*<MockMemo/>*/}
                 {/*{list.map(item=>{return item.name})}*/}
             <BrowserRouter>
-                <h1> Hello111, World! ！！！！</h1>
+
                 {/*<Component1 App={this}>*/}
                 {/*    <div>1</div>*/}
                 {/*    <div>2</div>*/}
                 {/*</Component1>*/}
-                <Demo/>
+
                 {/*<div id={'mapContainer'}>*/}
 
                 {/*</div>*/}
-                <Counter num={this.state.num} onClick={this.onClick}/>
+                {/*<Counter num={this.state.num} onClick={this.onClick}/>*/}
+                <Routes>
+                        <Route path={'/rtc'} element={<WebRtc/>}/>
+                        <Route path={'/demo'} element={<Demo/>}/>
+                </Routes>
             </BrowserRouter>
+                {/*<RafTest/>*/}
             </>
         );
     }

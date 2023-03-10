@@ -31,6 +31,24 @@ module.exports = {
                 test:/\.(js|jsx)$/,
                 loader:'babel-loader',
                 exclude:/node_modules/,
+                options: {
+                    cacheDirectory: true, // 启用缓存机制以防止在重新打包未更改的模块时进行二次编译
+                    // presets: [[
+                    //     'env', {
+                    //         modules: false, // 将ES6 Module的语法交给Webpack本身处理
+                    //     }
+                    // ]],
+                },
+            }, {
+                test: /\.js|tsx$/,
+                use: [
+                    {
+                        loader: 'my-loader',
+                        options: {
+                            flag: true,
+                        },
+                    },
+                ],
             },{
                 test:/\.(ts|tsx)$/,
                 loader:'ts-loader',
@@ -63,6 +81,9 @@ module.exports = {
 
         ]
     },
+    resolveLoader: {
+        modules: ['node_modules', './src/MyLoader'],
+    },
     // 插件
     plugins:[
         new HtmlWebpackPlugin({
@@ -86,7 +107,7 @@ module.exports = {
         hot: true,
         contentBase: false, // 告诉服务器从哪里提供内容。只有在你想要提供静态文件时才需要
         compress: true, // 一切服务都启用gzip 压缩：
-        port: "3000", // 指定段靠谱
+        port: "8080", // 指定段靠谱
         publicPath: "/", // 访问资源加前缀
         proxy: {
             // 接口请求代理

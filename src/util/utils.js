@@ -470,3 +470,19 @@ function myInstanceOf (example , classFunc){
         proto = Object.getPrototypeOf(proto)
     }
 }
+
+// 组合式继承
+
+function Parent(name){
+    this.name = name
+}
+
+class Child {
+    constructor() {
+        Parent.call(this)
+        Child.prototype = Object.create(Parent.prototype)
+        Child.prototype.constructor = Child
+    }
+}
+
+console.log(Child)

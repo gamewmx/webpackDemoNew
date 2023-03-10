@@ -46,7 +46,7 @@ export default class demo extends React.Component<any, any>{
         // this.setState({
         //     test:eventBus
         // })
-
+this.canvastest()
     }
 
     // 获取所有视频输入设备
@@ -397,10 +397,10 @@ export default class demo extends React.Component<any, any>{
                 <button onClick={()=>{
                     (document.querySelector('.wrapper') as HTMLElement).style.display  = (document.querySelector('.wrapper') as HTMLElement).style.display === 'block' ? 'none' : 'block'
                 }}>RequestAnimationFrameTest</button>
-            {/*<canvas  id="c"*/}
-            {/*         width="1000"*/}
-            {/*         height="1000"*/}
-            {/*         style={{"border": '1px solid #ccc',margin:20}} onClick={this.canvastest}></canvas>*/}
+            <canvas  id="c"
+                     width="1000"
+                     height="1000"
+                     style={{"border": '1px solid #ccc',margin:20}} onClick={this.canvastest}></canvas>
                 <canvas  id="canvas"
                      width="1000"
                      height="1000"
